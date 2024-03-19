@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-enum state_type { START, IDEN, NUM, ASSIGN, ARIFM, COM, CONDITION, ERROR };
+enum state_type { START, IDEN, NUM, ASSIGN, ARIFM, SPR, COM, CONDITIONS, ERROR };
 enum lexem_type { KEYWORD, IDENTIDICATOR, NUMBER, OPERATOR, SEPARATOR };
 
 class Lexem
@@ -14,6 +14,7 @@ public:
     int id;
     lexem_type type;
     std::string value;
+    Lexem() {}
     Lexem(int id, lexem_type type, std::string value) {
         this->id = id;
         this->type = type;
@@ -34,10 +35,12 @@ public:
     void openfile();
     void openfile(std::string path);
     std::string lexem_keyword(std::string lexem);
+    bool is_keyword(std::string lexem);
 
+    int Analizator(std::vector<Lexem> lexem_table);
     
 
 };
-int Analizator(std::string filename, std::vector<Lexem> lexem_table);
+
 
 
