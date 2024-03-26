@@ -3,7 +3,7 @@
 #include <fstream>
 #include <set>
 #include <string>
-#include <vector>
+#include <list>
 
 enum state_type { START, IDEN, NUM, ASSIGN, ARIFM, SPR, COM, CONDITIONS, ERROR };
 enum lexem_type { KEYWORD, IDENTIFICATOR, NUMBER, OPERATOR, SEPARATOR };
@@ -43,7 +43,7 @@ public:
     bool is_keyword(std::string lexem);
     std::string get_string_type(lexem_type name);
 
-    int Analizator(std::vector<Lexem> &lexem_table);
+    int Analizator(std::list<Lexem> &lexem_table);
     
 
 };

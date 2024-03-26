@@ -2,9 +2,9 @@
 
 int main() {
     try {
-        std::vector<Lexem> table_lexem;
+        std::list<Lexem> table_lexem;
         const std::string filename = "input.txt";
-
+        int count = 0;
         Analyzer lex_analazer(filename);
 
         if (lex_analazer.Analizator(table_lexem) == 0) {
@@ -13,10 +13,13 @@ int main() {
         else {
             std::cout << "Error!" << std::endl;
         }
-        std::cout << "Number\t\tLexem\t\tTypeLexem" << std::endl;
-        for (size_t i = 0; i < table_lexem.size(); i++)
+        if (!table_lexem.empty()) {
+            std::cout << "Number\t\tLexem\t\tTypeLexem" << std::endl;
+        }
+        for (Lexem n: table_lexem)
         {
-            std::cout << (i + 1) << ":" "\t\t" << table_lexem[i].value << "\t\t" << lex_analazer.get_string_type(table_lexem[i].type) << std::endl;;
+            
+            std::cout << ++count << ":" "\t\t" << n.value << "\t\t" << lex_analazer.get_string_type(n.type) << std::endl;
         }
         return 0;
     }

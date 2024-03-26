@@ -1,2 +1,2 @@
 int test := IV;
-if (i = II);
+if (i != 2II);

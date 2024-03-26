@@ -80,7 +80,7 @@ std::string Analyzer::get_string_type(lexem_type name)
     }
 }
 
-int Analyzer::Analizator(std::vector<Lexem> &lexem_table)
+int Analyzer::Analizator(std::list<Lexem> &lexem_table)
 {   
     // Для вывода сообщения, о расположение ошибки
     int number_line = 1;
@@ -172,7 +172,8 @@ int Analyzer::Analizator(std::vector<Lexem> &lexem_table)
 
             if (lexem.length() > 64) break;
             
-            *(lexem.end()-1) = '\0';
+            lexem += '\0';
+            //*(lexem.end()-1) = '\0';
 
             if (is_keyword(lexem))
                 cur_lexem.type = KEYWORD;
@@ -286,6 +287,11 @@ int Analyzer::Analizator(std::vector<Lexem> &lexem_table)
                 }
 
                 lexem_table.push_back(cur_lexem);
+
+                // this is a heck
+                cur_sym = this->file.get();
+
+                state = START;
             }
             else if ((cur_sym == '<') || (cur_sym == '>'))
             {
@@ -382,7 +388,8 @@ int Analyzer::Analizator(std::vector<Lexem> &lexem_table)
 
             state = START;
 
-            while ((cur_sym != ' ') && (cur_sym != '\t') && (cur_sym != '\n'))
+            
+            while ((cur_sym != ' ') && (cur_sym != '\t') && (cur_sym != '\n') && !this->file.eof())
             {
                 if (cur_sym == '\n')
                 {
@@ -393,6 +400,7 @@ int Analyzer::Analizator(std::vector<Lexem> &lexem_table)
                 cur_sym = this->file.get();
                 number_symbol++;
             }
+
             break;
         default:
             break;
