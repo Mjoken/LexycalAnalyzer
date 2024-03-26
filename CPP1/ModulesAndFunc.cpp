@@ -172,14 +172,15 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
 
             if (lexem.length() > 64) break;
             
-            lexem += '\0';
+            //lexem += '\0';
             //*(lexem.end()-1) = '\0';
 
-            if (is_keyword(lexem))
+            if (is_keyword(lexem)) {
                 cur_lexem.type = KEYWORD;
-            else
+            }
+            else {
                 cur_lexem.type = IDENTIFICATOR;
-
+            }
             if (flag_id_with_number == true)
             {
                 cur_lexem.value = buff_id_with_number;
@@ -209,14 +210,14 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
             while (cur_sym == 'X' || cur_sym == 'V' || cur_sym == 'I')
             {
                 if (lexem.length() > 64) break;
-                
-                *(lexem.end() - 1) = cur_sym;
+                lexem += cur_sym;
+                //*(lexem.end() - 1) = cur_sym;
                 lexem += cur_sym;
                 cur_sym = this->file.get();
             }
 
             if (lexem.length() > 64) break;
-
+            //lexem += '\0';
             *(lexem.end() - 1) = '\0';
 
             cur_lexem.type = NUMBER;

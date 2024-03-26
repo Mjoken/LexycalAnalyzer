@@ -29,9 +29,10 @@ class Analyzer {
 private:
     std::string path;
     std::ifstream file;
-    std::multiset<std::string> lexem = { "if", "then", "else", "int", "float"};
+    std::multiset<std::string> lexem = { "if", "then", "else", "int", "float" };
 
 public:
+
     Analyzer();
     Analyzer(std::string path);
     ~Analyzer();
