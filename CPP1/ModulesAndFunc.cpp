@@ -125,6 +125,7 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
                 }
                 else if (((cur_sym >= 'A') && (cur_sym <= 'Z')) 
                         || ((cur_sym >= 'a') && (cur_sym <= 'z')) 
+                        || ((cur_sym >= '0') && (cur_sym <= '9'))
                         || (cur_sym == '_')) {
                     state = IDEN;
                 }
@@ -163,6 +164,7 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
 
             while ((((cur_sym >= 'A') && (cur_sym <= 'Z'))
                 || ((cur_sym >= 'a') && (cur_sym <= 'z'))
+                || ((cur_sym >= '0') && (cur_sym <= '9'))
                 || (cur_sym == '_'))) {
                 
                 if (lexem.length() > 64) break;
@@ -171,7 +173,6 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
             }
 
             if (lexem.length() > 64) break;
-            
             //lexem += '\0';
             //*(lexem.end()-1) = '\0';
 
@@ -179,6 +180,12 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
                 cur_lexem.type = KEYWORD;
             }
             else {
+                if ((lexem[0] >= '0') && (lexem[0] <= '9')) {
+                    //cur_lexem.type = LEXERROR;
+                    //lexem_table.push_back(cur_lexem);
+                    state = ERROR;
+                    break;
+                }
                 cur_lexem.type = IDENTIFICATOR;
             }
             if (flag_id_with_number == true)
@@ -212,13 +219,13 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
                 if (lexem.length() > 64) break;
                 lexem += cur_sym;
                 //*(lexem.end() - 1) = cur_sym;
-                lexem += cur_sym;
+                //lexem += cur_sym;
                 cur_sym = this->file.get();
             }
 
             if (lexem.length() > 64) break;
-            //lexem += '\0';
-            *(lexem.end() - 1) = '\0';
+            lexem += '\0';
+            //*(lexem.end() - 1) = '\0';
 
             cur_lexem.type = NUMBER;
             cur_lexem.value = lexem;
@@ -390,7 +397,9 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
             state = START;
 
             
-            while ((cur_sym != ' ') && (cur_sym != '\t') && (cur_sym != '\n') && !this->file.eof())
+            while ((cur_sym != ' ') && (cur_sym != '\t') && (cur_sym != '\n') && !this->file.eof() && (cur_sym == '+' || cur_sym == '-' || cur_sym == '*' ||
+                cur_sym == '/' || cur_sym == '%') && (cur_sym == ':') && (cur_sym == '(' || cur_sym == ')' || cur_sym == ';' ||
+                    cur_sym == '{' || cur_sym == '}'))
             {
                 if (cur_sym == '\n')
                 {

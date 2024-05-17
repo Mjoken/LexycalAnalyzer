@@ -6,7 +6,7 @@
 #include <list>
 
 enum state_type { START, IDEN, NUM, ASSIGN, ARIFM, SPR, COM, CONDITIONS, ERROR };
-enum lexem_type { KEYWORD, IDENTIFICATOR, NUMBER, OPERATOR, SEPARATOR };
+enum lexem_type { KEYWORD, IDENTIFICATOR, NUMBER, OPERATOR, SEPARATOR, LEXERROR };
 
 class Lexem
 {
@@ -29,7 +29,7 @@ class Analyzer {
 private:
     std::string path;
     std::ifstream file;
-    std::multiset<std::string> lexem = { "if", "then", "else", "int", "float" };
+    std::multiset<std::string> lexem = { "if", "then", "else", "int", "float", "double"};
 
 public:
 
