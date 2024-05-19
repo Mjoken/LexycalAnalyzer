@@ -1,9 +1,15 @@
-//int test :=IV
-if (i == II) then { 
-int a321 := IV;
-} else { 
-int test:= V;
-}
-if (int j == V){
-//float test:=VI;
+int a := I;
+int a := I;
+
+{
+	int a := I;
+
+	{
+		int g := I;
+		int j := I;
+	}
+	{
+		int i := II;
+		int f := III;
+	}
 }

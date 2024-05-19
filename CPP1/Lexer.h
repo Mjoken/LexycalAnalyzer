@@ -1,4 +1,5 @@
 #pragma once
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <set>
@@ -7,7 +8,7 @@
 
 enum state_type { START, IDEN, NUM, ASSIGN, ARIFM, SPR, COM, CONDITIONS, ERROR };
 enum lexem_type { KEYWORD, IDENTIFICATOR, NUMBER, OPERATOR, SEPARATOR, LEXERROR };
-
+//int level = 0;
 class Lexem
 {
 public:
@@ -43,8 +44,7 @@ public:
     std::string lexem_keyword(std::string lexem);
     bool is_keyword(std::string lexem);
     std::string get_string_type(lexem_type name);
-
-    int Analizator(std::list<Lexem> &lexem_table);
+    int Analizator(std::list<Lexem>& lexem_table);
     
 
 };

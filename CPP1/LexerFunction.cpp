@@ -1,5 +1,4 @@
-#include "ModulesAndFunc.h"
-
+#include "Lexer.h"
 Analyzer::Analyzer()
 {
     this->path = "input.txt";
@@ -80,12 +79,13 @@ std::string Analyzer::get_string_type(lexem_type name)
     }
 }
 
-int Analyzer::Analizator(std::list<Lexem> &lexem_table)
+int Analyzer::Analizator(std::list<Lexem>& lexem_table)
 {   
     // ƒл€ вывода сообщени€, о расположение ошибки
     int number_line = 1;
     int number_symbol = 0;
-
+    // ”чет уровн€ вложености
+    int level = 0;
     // ѕеременные, дл€ того, чтобы корректно обрабатывать лексемы 
     // начинающие с римских цифр, €вл€ющиемис€ идентификаторами
     bool flag_id_with_number = false;
@@ -203,6 +203,7 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
 
             lexem_table.push_back(cur_lexem);
 
+
             state = START;
             break;
         // end of CASE IDEN
@@ -265,6 +266,14 @@ int Analyzer::Analizator(std::list<Lexem> &lexem_table)
         break;
 
         case SPR:
+            if (cur_sym == '{')
+            {
+                level++;
+            }
+            else if (cur_sym == '}')
+            {
+                level--;
+            }
             cur_lexem.type = SEPARATOR;
 
             cur_lexem.value = cur_sym;

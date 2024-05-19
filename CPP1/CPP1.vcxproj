@@ -128,11 +128,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IdentidicatorTableFunction.cpp" />
     <ClCompile Include="LexycalAnalyzer.cpp" />
-    <ClCompile Include="ModulesAndFunc.cpp" />
+    <ClCompile Include="LexerFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ModulesAndFunc.h" />
+    <ClInclude Include="IdentidicatorTable.h" />
+    <ClInclude Include="Lexer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
