@@ -94,6 +94,32 @@ void IdentidicatorTable::insert(std::string& name_iden, int lvl, std::string& ty
 		{
 			if (identeficatorType[i] == type) std::cout << "Repeated declaration in the same scope." << " Level:" << lvl << " Name: " << name_iden << std::endl;;
 		}
+
+	}
+	item = createElem(name_iden, lvl, type);
+	unsigned long index = hash(name_iden);
+	elementTableElement* current_item = *this->item[index];
+
+	if (current_item == NULL)
+	{
+		// Помешаем элемент в это место и увеличиваем количество элементом на 1
+		*this->item[index] = item;
+		this->count++;
+	}
+	// Если там занято
+	else {
+		// Если это тот же ключ, то заменяем ему значения уровня
+		if (current_item->name_iden == name_iden)
+		{
+			//this->item[index]->level = lvl;
+			return;
+		}
+		// Если там лежит другой элемент, обрабатываем коллизию 
+		else
+		{
+			handeCollision(index, item);
+			return;
+		}
 	}
 }
 
