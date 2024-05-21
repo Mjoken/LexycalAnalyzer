@@ -47,7 +47,7 @@ void IdentidicatorTable::addElem(std::string& name_iden, unsigned int& level, st
 		}
 		else 
 		{
-			handleCollision(ElementPlace, curElem);
+			handleCollision(this->items[index], curElem);
 			return;
 		}
 	}
@@ -55,14 +55,15 @@ void IdentidicatorTable::addElem(std::string& name_iden, unsigned int& level, st
 
 void IdentidicatorTable::handleCollision(elementTableElement* place, elementTableElement* curElem)
 {
+	
 	elementTableElement* head = place->collision;
 	if (head == nullptr) 
 	{
-		head = curElem;
+		place->collision = curElem;
 	}
 	else if (head->collision == nullptr) 
 	{
-		head->collision = curElem;
+		place->collision->collision = curElem;
 	}
 	else 
 	{
@@ -120,6 +121,7 @@ void IdentidicatorTable::printElems()
 		if (curElem != nullptr) {
 			if (curElem->collision == nullptr)
 			{
+				//std::cout << "Element (" << i << ")" << std::endl;
 				std::cout << "Identeficator name: " << curElem->name_iden << "\t| level: " << curElem->level << "\t| type: " << curElem->type;
 				//std::cout << "\t\t" << curElem->name_iden << "\t\t " << curElem->level << "\t\t" << curElem->type;
 				if (curElem->repeatedDeclaration) std::cout << "| <reapeted declaration>";
@@ -127,6 +129,9 @@ void IdentidicatorTable::printElems()
 			}
 			else if (curElem->collision != nullptr)
 			{
+				//std::cout << "Element (" << i << ")" << std::endl;
+				std::cout << "Identeficator name: " << curElem->name_iden << "\t| level: " << curElem->level << "\t| type: " << curElem->type <<std::endl;
+				std::cout << "Colisions for elem (" << i << ")" << std::endl;
 				elementTableElement* curCollision = curElem->collision;
 				while (curCollision != nullptr) {
 					std::cout << "Identeficator name: " << curElem->name_iden << "| level: " << curElem->level << "| type" << curElem->type;
