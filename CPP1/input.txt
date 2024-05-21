@@ -1,9 +1,11 @@
 int a := I;
 int a := I;
-
+int b := I;
+int abob := I;
 {
-	int a := I;
-
+	int c := I;
+	int abo := I;
+	int ab := I;
 	{
 		int g := I;
 		int j := I;

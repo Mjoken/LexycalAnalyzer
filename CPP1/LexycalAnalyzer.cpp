@@ -19,8 +19,9 @@ int main() {
         for (Lexem n: table_lexem)
         {
             
-            std::cout << ++count << ":" "\t\t" << n.value << "\t\t" << lex_analazer.get_string_type(n.type) << std::endl;
+           std::cout << ++count << ":" "\t\t" << n.value << "\t\t" << lex_analazer.get_string_type(n.type) << std::endl;
         }
+        lex_analazer.idenTable->printElems();
         return 0;
     }
     catch (const char* error_message) {

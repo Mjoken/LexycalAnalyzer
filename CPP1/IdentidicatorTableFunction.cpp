@@ -4,121 +4,139 @@ IdentidicatorTable::IdentidicatorTable(int size)
 {
 	this->size = size;
 	this->count = 0;
-	this->item;
-	this->collision = new Linked_List * [size];
+	this->items = new elementTableElement*[size];
+	for (size_t i = 0; i < size; i++)
+	{
+		this->items[i] = nullptr;
+	}
 }
 
 IdentidicatorTable::~IdentidicatorTable()
 {
-	for (size_t i = 0; i < this->size; i++)
-	{
-		delete[] collision[i];
-	}
-	delete[] collision;
-}
-
-elementTableElement* IdentidicatorTable::createElem(std::string& name, int& lvl, std::string& type)
-{
-	elementTableElement* item = new elementTableElement;
 	
-	item->name_iden = name;
-	item->level = lvl;
-	item->type = type;
-
-	return item;
 }
 
-void IdentidicatorTable::addElem(std::string& name, int& lvl, std::string& type)
+void IdentidicatorTable::addElem(std::string& name_iden, unsigned int& level, std::string& type)
 {
-}
-
-void IdentidicatorTable::handeCollision(unsigned long index, elementTableElement* item)
-{
-	Linked_List* head = this->collision[index];
-
-	if (head == NULL) 
-	{
-		head = new Linked_List;
-		head->next = NULL;
-		head->item = item;
-	}
-	else if (head->next == NULL) 
-	{
-		Linked_List* node = new Linked_List;
-		node->item = item;
-		node->next = NULL;
-		head->next = node;
-	}
-	else 
-	{
-		Linked_List* temp = head;
-		while (temp->next) 
-		{
-			temp = temp->next;
-		}
-		Linked_List* node = new Linked_List;
-		node->item = item;
-		node->next = NULL;
-		temp->next = node;
-	}
-	this->collision[index] = head;
-}
-
-elementTableElement* IdentidicatorTable::lookUp(std::string& name_iden)
-{
-	int index = hash(name_iden);
-	elementTableElement* item = *this->item[index];
-	Linked_List* head = this->collision[index];
-	while (item != NULL) 
-	{
-		if (item->name_iden == name_iden) 
-		{
-			return item;
-		}
-		if (head == NULL)
-		{
-			return NULL;
-		}
-		item = head->item;
-		head = head->next;
-	}
-	return nullptr;
-}
-
-void IdentidicatorTable::insert(std::string& name_iden, int lvl, std::string& type)
-{
-	elementTableElement* item = lookUp(name_iden);
-	if (item != NULL) 
+	unsigned long index = hash(name_iden);
+	elementTableElement* repeatedElement = lookUp(name_iden, index);
+	elementTableElement* ElementPlace = this->items[index];
+	elementTableElement* curElem = createElement(name_iden, level, type);
+	if (repeatedElement != nullptr)
 	{
 		for (size_t i = 0; i < identeficatorType->size(); i++)
 		{
-			if (identeficatorType[i] == type) std::cout << "Repeated declaration in the same scope." << " Level:" << lvl << " Name: " << name_iden << std::endl;;
+			if (identeficatorType[i] == type) curElem->repeatedDeclaration = true;
 		}
-
 	}
-	item = createElem(name_iden, lvl, type);
-	unsigned long index = hash(name_iden);
-	elementTableElement* current_item = *this->item[index];
+	
+	
 
-	if (current_item == NULL)
+	if (ElementPlace == nullptr) 
 	{
-		// Помешаем элемент в это место и увеличиваем количество элементом на 1
-		*this->item[index] = item;
+		this->items[index] = curElem;
 		this->count++;
 	}
-	// Если там занято
-	else {
-		// Если это тот же ключ, то заменяем ему значения уровня
-		if (current_item->name_iden == name_iden)
+	else 
+	{
+		if (ElementPlace->name_iden == name_iden) 
 		{
-			//this->item[index]->level = lvl;
+			this->items[index]->level = level;
+			this->items[index]->repeatedDeclaration = true;
 			return;
 		}
-		// Если там лежит другой элемент, обрабатываем коллизию 
-		else
+		else 
 		{
-			handeCollision(index, item);
+			handleCollision(ElementPlace, curElem);
 			return;
+		}
+	}
+}
+
+void IdentidicatorTable::handleCollision(elementTableElement* place, elementTableElement* curElem)
+{
+	elementTableElement* head = place->collision;
+	if (head == nullptr) 
+	{
+		head = curElem;
+	}
+	else if (head->collision == nullptr) 
+	{
+		head->collision = curElem;
+	}
+	else 
+	{
+		elementTableElement* temp = head;
+		while (temp->collision) 
+		{
+			temp = temp->collision;
+		}
+		temp->collision = curElem;
+	}
+
+}
+
+
+elementTableElement* IdentidicatorTable::createElement(std::string& name_iden, unsigned int& level, std::string& type)
+{
+	elementTableElement* TableElement = new elementTableElement;
+	TableElement->name_iden = name_iden;
+	TableElement->level = level;
+	TableElement->type = type;
+	TableElement->collision = nullptr;
+	return TableElement;
+}
+
+elementTableElement* IdentidicatorTable::lookUp(std::string& name_iden, unsigned long& index)
+{
+	elementTableElement* curitem = this->items[index];
+	elementTableElement* head = nullptr;
+	if (curitem != nullptr) head = curitem->collision;
+	while (curitem != nullptr) 
+	{
+		if (curitem->name_iden == name_iden) 
+		{
+			return curitem;
+		}
+		if (head == nullptr) 
+		{
+			return nullptr;
+		}
+		curitem = curitem->collision;
+		head = head->collision;
+	}
+
+	return nullptr;
+}
+
+void IdentidicatorTable::printElems()
+{
+	std::cout << "\t\t IDENTEFICATORS TABLE" << std::endl;
+	std::cout << "---------------------------------------------------" << std::endl;
+	std::cout << "Identeficators name " << " \t| levels " << " \t| types " << std::endl;
+	for (size_t i = 0; i < this->size; i++) 
+	{
+		elementTableElement* curElem = this->items[i];
+		if (curElem != nullptr) {
+			if (curElem->collision == nullptr)
+			{
+				std::cout << "Identeficator name: " << curElem->name_iden << "\t| level: " << curElem->level << "\t| type: " << curElem->type;
+				//std::cout << "\t\t" << curElem->name_iden << "\t\t " << curElem->level << "\t\t" << curElem->type;
+				if (curElem->repeatedDeclaration) std::cout << "| <reapeted declaration>";
+				std::cout << std::endl;
+			}
+			else if (curElem->collision != nullptr)
+			{
+				elementTableElement* curCollision = curElem->collision;
+				while (curCollision != nullptr) {
+					std::cout << "Identeficator name: " << curElem->name_iden << "| level: " << curElem->level << "| type" << curElem->type;
+					//std::cout << "\t\t" << curElem->name_iden << "\t\t " << curElem->level << "\t\t" << curElem->type;
+					if (curElem->repeatedDeclaration) std::cout << "| <reapeted declaration>";
+					std::cout << std::endl;
+					curElem = curCollision;
+					curCollision = curCollision->collision;
+				}
+			}
 		}
 	}
 }
@@ -130,3 +148,4 @@ unsigned long IdentidicatorTable::hash(std::string& str)
 		i += str[j];
 	return  i % this->size;
 }
+

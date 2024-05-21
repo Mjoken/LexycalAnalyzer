@@ -10,6 +10,7 @@ Analyzer::Analyzer()
 
 Analyzer::Analyzer(std::string path)
 {
+    this->idenTable = new IdentidicatorTable(SIZE_HASHTABLE);
     this->path = path;
     this->file.open(this->path);
     if (!this->file.is_open()) {
@@ -85,7 +86,8 @@ int Analyzer::Analizator(std::list<Lexem>& lexem_table)
     int number_line = 1;
     int number_symbol = 0;
     // ”чет уровн€ вложености
-    int level = 0;
+    unsigned int level = 0;
+    Lexem idenType;
     // ѕеременные, дл€ того, чтобы корректно обрабатывать лексемы 
     // начинающие с римских цифр, €вл€ющиемис€ идентификаторами
     bool flag_id_with_number = false;
@@ -102,7 +104,7 @@ int Analyzer::Analizator(std::list<Lexem>& lexem_table)
         return -1;
     }
 
-    state_type state = START;
+	state_type state = START;
     std::string lexem(" ");
 
     cur_sym = this->file.get();
@@ -200,9 +202,15 @@ int Analyzer::Analizator(std::list<Lexem>& lexem_table)
             {
                 cur_lexem.value = lexem;
             }
+            
+            if(lexem_table.size() > 0) idenType = lexem_table.back();
 
             lexem_table.push_back(cur_lexem);
 
+           if (cur_lexem.type == IDENTIFICATOR) 
+            {
+                idenTable->addElem(cur_lexem.value, level, idenType.value);
+            }
 
             state = START;
             break;
